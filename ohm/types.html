@@ -1,0 +1,198 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Types</title>
+    <meta charset=utf-8>
+    <script src="/Users/tarvydas/projects/ohm/examples/lib.js"></script>
+    <script src="/Users/tarvydas/projects/ohm/dist/ohm.js"></script>
+
+    <script>
+      console.log('a');
+    </script>
+    
+    <script type="text/types-testing">
+      external :string
+  expression-kind = 'true' | 'false' | 'object'
+    </script>
+    <script type="text/types">
+external :string
+      
+TypeDescriptor = { [type] [phase] [class] }
+  type == type-name
+  phase == phase-name
+  class = { struct [method] }
+
+    struct = { [field] }
+      field == type
+
+    method =| external-method | script
+
+       external-method = { phase method-name [formal] return-type}
+       script =          { phase script-name [formal] return-type implementation }
+
+
+implementation == [statement]
+
+type-name == name
+phase-name == name
+struct-name == name
+field-name == name
+var == name
+name == :string
+
+expression = { expression-kind object }
+  expression-kind = 'true' | 'false' | 'object'
+  object = { object-name [field] }
+    field = { field-name field-kind [actual-parameter]}
+    field-name == name
+    field-kind = 'simple' | 'collection'
+    actual-parameter == expression
+
+statement = | let-statement | set-statement | create-statement
+	    | for-statement | loop-statement | exit-when-statement 
+	    | if-statement
+	    | call-internal-statement | call-external-statement
+let-statement = { var expression body }
+set-statement = { var expression body }
+create-statement = { var class-ref body }
+for-statement = { var list-ref body } 
+loop-statement = { body }
+exit-when-statement = { boolean-expression }
+if-statement = { boolean-expression then-body else-body }
+call-internal-statement = { callable-expression }
+call-external-statement = { callable-expression }
+
+boolean-expression == expression
+then-body == implementation
+else-body == implementation
+list-ref == expression
+class-ref == expression
+callable-expression == expression
+body == implementation
+    </script>
+
+// Ohm parser for Types language//
+
+    <script type="text/ohm-js">
+ESATypes{ 
+TypesProgram =
+    ExternalType+
+    TypeDeclaration+
+
+ExternalType = "external" newAtomicType
+
+TypeDeclaration = 
+            RecordTypeDeclaration | SynonymTypeDeclaration
+          | AggregateTypeDeclaration | EnumerationTypeDeclaration
+
+SynonymTypeDeclaration = NewTypeName "==" TypeReference
+RecordTypeDeclaration = NewTypeName "=" "{" NewFieldName+ "}"
+AggregateTypeDeclaration = NewTypeName "=" AggregateReference+
+EnumerationTypeDeclaration = NewTypeName "=" enumerationValue ("|" enumerationValue)+
+
+AggregateReference = "|" lexical_symbol
+enumerationValue = "'" lexical_symbol "'"
+
+NewFieldName = newListField | newAtomicField
+newListField = "[" newAtomicField "]"
+newAtomicField = lexical_symbol
+
+NewTypeName = newListType | newAtomicType
+newAtomicType = lexical_symbol
+newListType = "[" newAtomicType "]"
+
+TypeReference = ListTypeReference | AtomicTypeReference
+ListTypeReference = "[" lexical_symbol "]"
+AtomicTypeReference = lexical_symbol
+
+
+lexical_symbol = ~keyword lexical_letchar (lexical_letchar | lexical_numchar)*
+lexical_letchar = lexical_lc | lexical_uc | "-" | ":"
+lexical_numchar = "0".."9"
+lexical_lc = "a".."z"
+lexical_uc = "A".."Z"
+
+keyword = ("external") (" " | "\n")
+
+commentToEOL = "%" (~"\n" any)* "\n"
+space += commentToEOL
+
+}
+    </script>
+
+    <script>
+      var g = ohm.grammarFromScriptElement();
+      var semantics = g.createSemantics();
+    </script>
+
+    <script>
+semantics.addOperation (
+    'nothing',
+    {
+	TypesProgram: function(externals, typeDeclarations) {},
+	ExternalType: function(_, name) {},
+	TypeDeclaration: function(decl) {},
+	SynonymTypeDeclaration: function(name,_,typeRef) {},
+	RecordTypeDeclaration: function(name,_,_b1,fields,_b2) {},
+	AggregateTypeDeclaration: function(name,_,types) {},
+	EnumerationTypeDeclaration: function(name,_,firstEnums,_orBars,restEnums) {},
+
+	AggregateReference: function(_,sym) {},
+	enumerationValue: function(_q1,sym,_q2) {},
+	NewFieldName: function(field) {},
+	newListField: function(_b1,field,_b2) {},
+	newAtomicField: function(sym) {},
+	NewTypeName: function(typeName) {},
+	newAtomicType: function(sym) {},
+	newListType: function(_b1,sym,_b2) {},
+	TypeReference: function(typeRef) {},
+	ListTypeReference: function(_b1,typeRef,_b2) {},
+	AtomicTypeReference: function(typeRef) {},
+	lexical_symbol: function(c,cs) {},
+	lexical_letchar: function(c) {},
+	lexical_numchar: function(c) {},
+	lexical_lc: function(c) {},
+	lexical_uc: function(c) {},
+	keyword: function(kw,_spc) {}
+    }
+);
+    </script>
+
+  </head>
+  <body>
+    <button onclick="typesparsetest()">Click me</button>
+    <p id="timestamp"></p>
+    <p id="result"></p>
+    <script>
+      var typesdsl = document.querySelector('script[type="text/types"]').innerHTML;
+      var resultsString = '';
+      
+      function toListOfStrings(a) {
+	  return a.join(' ');
+      }
+      
+      function toPackedString(a) {
+	  return a.join('');
+      }
+      
+      // sem.addOperation(
+      // 	  'unity',
+      // 	  {
+      // 	      _terminal: function() { return this.primitiveValue; }
+      // 	  }
+      // );
+      
+
+      function displayDate () {
+	  document.getElementById('timestamp').innerHTML = Date();
+      }
+      function typesparsetest () {
+	  var tr = g.trace(typesdsl);
+          console.log(tr.toString());
+          var r = g.match(typesdsl);
+	  document.getElementById('result').innerHTML = r;
+	  displayDate();
+      }
+    </script>
+  </body>
+</html>

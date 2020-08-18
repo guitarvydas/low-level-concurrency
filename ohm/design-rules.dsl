@@ -17,5 +17,9 @@ design rules
   
   !!! all ReturnTypeReferences are members of program.type
   !!! all StructNames are unique
+
+  !!! types
+  !!! all TypeReference is member(types)
+  !!! all AggregateReference is member(types)
 end design rules
 
