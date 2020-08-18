@@ -576,6 +576,86 @@ space += commentToEOL
 }
     </script>
 
+    <script>
+      var g = ohm.grammarFromScriptElement();
+      var semantics = g.createSemantics();
+    </script>
+
+    <script>
+      semantics.addOperation (
+    'nothing',
+    {
+	ESAProgram: function(types,phases,structs,whensAndScripts) {},
+	TypeDeclaration: function(_,typeName) {},
+	PhaseDeclaration: function(_,phaseName) {},
+	StructDeclaration: function(_,structName,fields,_end,_struct) {},
+	WhenDeclaration: function(_,phaseName,className,methods,_end,_when) {},
+	ExternalMethodDeclaration: function(_,name,parameters,returnType) {},
+	InternalMethodDeclaration: function(_,name,parameters,returnType) {},
+	
+	ParameterList: function(_lp,typeRef,_rp) {},
+	ReturnType: function(_,typeRef) {},
+	ScriptDefinition: function(_,className,scriptName,parameters,returnType,body,_end,_script) {},
+	ScriptNameInDefinition: function(name) {},
+	ParameterListInDefinition: function(_lp,parameters,_rp) {},
+	ReturnTypeInDefinition: function(_,returnType) {},
+
+	NewTypeName: function(name) {},
+	NewPhaseName: function(name) {},
+	NewStructField: function(field) {},
+	NewListField: function(_,name) {},
+	NewAtomicField: function(name) {},
+
+	StructName: function(name) {},
+	StructField: function(name) {},
+	PhaseReference: function(FirstName,_ors,restOfNames) {},
+	ClassReference: function(name) {},
+	ExternalMethodName: function(name) {},
+	InternalMethodName: function(name) {},
+	VarName: function(name) {},
+
+	ParameterTypeReference: function(typeRef) {},
+	ReturnTypeReference: function(typeRef) {},
+	StructFieldTypeReference: function(typeRef) {},
+	
+	TypeReference: function(typeReference) {},
+	ListTypeReference: function(_,typeName) {},
+	AtomicTypeReference: function(typeName) {},
+	FieldReference: function(typeName) {},
+	TypeName: function(typeName) {},
+
+	Statement: function(statement) {},
+	LetStatement: function(_,v,_eq,e,_in,body,_end,_let) {},
+	CreateStatement: function(statement) {},
+	CreateIndirect: function(_,v,_eq,_asterisk,e,_in,body,_end,_create) {},
+	CreateDirect: function(_,v,_eq,e,_in,body,_end,_create) {},
+	SetStatement: function(_,rhsE,_eq,e) {},
+	ForStatement: function(_,v,_eq,e,_in,body,_end,_for) {},
+	LoopStatement: function(_,body,_end,_loop) {},
+	ExitWhenStatement: function(_exit,_when,e) {},
+	IfStatement: function (_,rhsE,thenBody,elseBoy,_end,_if) {},
+	ReturnStatement: function(_,e) {},
+	CallInternalStatement: function(_,e) {},
+        CallExternalStatement: function(e) {},
+	
+	RHSExpression: function(external,e) {},
+	AssignableExpression: function(e) {},
+	Expression: function(e) {},
+	SelfExpression: function(_self,_dot,etail) {},
+	ObjectExpression: function(field,_dot,etail) {},
+	ExpressionTail: function(field,actuals,_dot,etail) {},
+	Actuals: function(_lp,actuals,_rp) {},
+	Actual: function(e) {},
+
+	lexical_symbol: function(c,cs) {},
+	lexical_letchar: function(c) {},
+	lexical_numchar: function(c) {},
+	lexical_lc: function(c) {},
+	lexical_uc: function(c) {},
+	keyword: function(kw,_spc) {}
+    }
+);
+    </script>
 
   </head>
   <body>
@@ -584,10 +664,7 @@ space += commentToEOL
     <p id="result"></p>
     <script>
       var esadsl = document.querySelector('script[type="text/esa"]').innerHTML;
-      var g = ohm.grammarFromScriptElement();
       var resultsString = '';
-      
-      var sem = g.createSemantics();
       
       function toListOfStrings(a) {
 	  return a.join(' ');
