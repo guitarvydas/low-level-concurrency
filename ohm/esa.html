@@ -6,8 +6,9 @@
     <script src="/Users/tarvydas/projects/ohm/examples/lib.js"></script>
     <script src="/Users/tarvydas/projects/ohm/dist/ohm.js"></script>
 
-    <script type="text/esa-hold">
-script kind add-input-pin(name)
+    <script type="text/esa-test">
+      script kind add-input-pin(name)
+      self
    self.ensure-input-pin-not-declared(name)
    self.install-input-pin(name)
 end script
@@ -555,7 +556,10 @@ CallExternalStatement = Expression
 
 RHSExpression = "@"? Expression
 AssignableExpression = Expression
-Expression = SelfExpression | ObjectExpression
+Expression = Constant | SelfExpression | ObjectExpression
+Constant = TrueConstant | FalseConstant
+TrueConstant = "true"
+FalseConstant = "false"
 SelfExpression = "self" ("." ExpressionTail)?
 ObjectExpression = FieldReference ("." ExpressionTail)?
 ExpressionTail = FieldReference Actuals? ("." ExpressionTail)?
@@ -569,7 +573,8 @@ lexical_lc = "a".."z"
 lexical_uc = "A".."Z"
 
 keyword = ("end" | "type" | "phase" | "let" | "create" | "set" | "for" | "loop"
-           | "exit" | "when" | "script" | "list" | "self" | "or") (" " | "\n")
+           | "exit" | "when" | "script" | "list" | "self" | "or"
+	   | "true" | "false" ) (" " | "\n")
 
 commentToEOL = "%" (~"\n" any)* "\n"
 space += commentToEOL
@@ -641,6 +646,9 @@ space += commentToEOL
 	RHSExpression: function(external,e) {},
 	AssignableExpression: function(e) {},
 	Expression: function(e) {},
+	Constant: function(e) {},
+	TrueConstant: function(s) {},
+	FalsexsConstant: function(s) {},
 	SelfExpression: function(_self,_dot,etail) {},
 	ObjectExpression: function(field,_dot,etail) {},
 	ExpressionTail: function(field,actuals,_dot,etail) {},
