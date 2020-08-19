@@ -17,7 +17,7 @@
     <script type="text/types">
 external :string
       
-TypeDescriptor = { [type] [phase] [class] }
+ESATypes = { [type] [phase] [class] }
   type == type-name
   phase == phase-name
   class = { struct [method] }
@@ -38,6 +38,7 @@ phase-name == name
 struct-name == name
 field-name == name
 var == name
+object-name == name
 name == :string
 
 expression = { expression-kind object }
