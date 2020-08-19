@@ -21,5 +21,12 @@ design rules
   !!! types
   !!! all TypeReference is member(types)
   !!! all AggregateReference is member(types)
+
+  ;; types
+  ;; All NewTyepeNames are unitque
+  ;; ALl NewPhaseNames are unique
+  ;; All NewAtomicFields are unique within a type
+  
+
 end design rules
 
