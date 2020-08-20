@@ -648,7 +648,7 @@ space += commentToEOL
 	Expression: function(e) {},
 	Constant: function(e) {},
 	TrueConstant: function(s) {},
-	FalsexsConstant: function(s) {},
+	FalseConstant: function(s) {},
 	SelfExpression: function(_self,_dot,etail) {},
 	ObjectExpression: function(field,_dot,etail) {},
 	ExpressionTail: function(field,actuals,_dot,etail) {},
@@ -663,6 +663,34 @@ space += commentToEOL
 	keyword: function(kw,_spc) {}
     }
 );
+    </script>
+
+    <script>
+      function toPackedString(a) {
+	  return a.join('');
+      }
+      
+      semantics.addOperation(
+	  'unity',
+	  {
+	      lexical_letchar: function(c) {return c.unity();},
+	      lexical_numchar: function(c) {return c.unity();},
+	      lexical_lc: function(c) {return c.unity();},
+	      lexical_uc: function(c) {return c.unity();},
+	      _terminal: function(){ 
+		  return this.primitiveValue; 
+	  }
+      );
+      
+      semantics.addOperation(
+	  'PushName',
+	  {
+	      lexical_symbol: function(c,cs) {
+		  table.name.SetNameFromString(table,c.tostring() + toPackedString(cs.unity()));
+	      }
+	  }
+      );
+      
     </script>
 
   </head>
