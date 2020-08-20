@@ -23,7 +23,7 @@ design rules
   !!! all AggregateReference is member(types)
 
   ;; types
-  ;; All NewTyepeNames are unitque
+  ;; All NewTypeNames are unitque
   ;; ALl NewPhaseNames are unique
   ;; All NewAtomicFields are unique within a type
   
