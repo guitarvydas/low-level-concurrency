@@ -638,7 +638,10 @@ space += commentToEOL
 	ForStatement: function(_,v,_eq,e,_in,body,_end,_for) {},
 	LoopStatement: function(_,body,_end,_loop) {},
 	ExitWhenStatement: function(_exit,_when,e) {},
-	IfStatement: function (_,rhsE,thenBody,elseBoy,_end,_if) {},
+	IfStatement: function(_,rhsexpr,thenpart,elsepart,_,_) {
+	    rhsexpr.esatest();thenpart.esatest();elsepart.esatest();},
+	ThenPart: function(_,statement) { statement.esatest(); },
+	ElsePart: function(_,statement) { statement.esatest(); },
 	ReturnStatement: function(_,e) {},
 	CallInternalStatement: function(_,e) {},
         CallExternalStatement: function(e) {},
@@ -678,7 +681,6 @@ space += commentToEOL
 	      lexical_lc: function(c) {return c.unity();},
 	      lexical_uc: function(c) {return c.unity();},
 	      _terminal: function(){ 
-		  return this.primitiveValue; 
 	  }
       );
       
@@ -693,9 +695,99 @@ space += commentToEOL
       
     </script>
 
+    <script>
+      semantics.addOperation(
+	  'esatest',
+	  {
+	      ESAProgram: function(types,phases,structs,whensAndScripts) {
+		  types.esatest(); phases.esatest(); structs.esatest(); whensAndScripts.esatest(); },
+	      TypeDeclaration: function(_,typeName) {typeName.esatest()},
+	      PhaseDeclaration: function(_,phaseName) {phaseName.esatest()},
+	      StructDeclaration: function(_,structName,fields,_end,_struct) {
+		  structName.esatest(); fields.esatest()},
+	      WhenDeclaration: function(_,phaseName,className,methods,_end,_when) {
+		  className.esatest(), methods.esatest()},
+	      ExternalMethodDeclaration: function(_,name,parameters,returnType) {
+		  name.esatest(),parameters.esatest(),returnType.esatest();},
+	      InternalMethodDeclaration: function(_,name,parameters,returnType) {
+		  name.esatest(),parameters.esatest(),returnType.esatest();},
+	      
+	      ParameterList: function(_lp,typeRef,_rp) {typeRef.esatest();},
+	      ReturnType: function(_,typeRef) {typeRef.esatest();},
+	      ScriptDefinition: function(_,className,scriptName,parameters,returnType,body,_end,_script) {
+		  className.esatest(),scriptName.esatest(),parameters.esatest(),returnType.esatest(),body.esatest();},
+	      ScriptNameInDefinition: function(name) {name.esatest();},
+	      ParameterListInDefinition: function(_lp,parameters,_rp) {parameters.esatest();},
+	      ReturnTypeInDefinition: function(_,returnType) {returnType.esatest();},
+	      
+	      NewTypeName: function(name) {name.esatest();},
+	      NewPhaseName: function(name) {name.esatest();},
+	      NewStructField: function(field) {field.esatest();},
+	      NewListField: function(_,name) {name.esatest();},
+	      NewAtomicField: function(name) {name.esatest();},
+	      
+	      StructName: function(name) {name.esatest();},
+	      StructField: function(name) {name.esatest();},
+	      PhaseReference: function(firstName,_ors,restOfNames) {firstName.esatest(); restOfNames.esatest();},
+	      ClassReference: function(name) {name.esatest();},
+	      ExternalMethodName: function(name) {name.esatest();},
+	      InternalMethodName: function(name) {name.esatest();},
+	      VarName: function(name) {},
+	      
+	      ParameterTypeReference: function(typeRef) {typeRef.esatest();},
+	      ReturnTypeReference: function(typeRef) {typeRef.esatest();},
+	      StructFieldTypeReference: function(typeRef) {typeRef.esatest();},
+	      
+	      TypeReference: function(typeReference) {typeReference.esatest();},
+	      ListTypeReference: function(_,typeName) {typeName.esatest();},
+	      AtomicTypeReference: function(typeName) {typeName.esatest();},
+	      FieldReference: function(typeName) {typeName.esatest();},
+	      TypeName: function(typeName) {typeName.esatest();},
+	      
+	      Statement: function(statement) {statement.esatest();},
+	      LetStatement: function(_,v,_eq,e,_in,body,_end,_let) {e.esatest(); body.esatest();},
+	      CreateStatement: function(statement) {statement.esatest();},
+	      CreateIndirect: function(_,v,_eq,_asterisk,e,_in,body,_end,_create) {e.esatest();body.esatest();},
+	      CreateDirect: function(_,v,_eq,e,_in,body,_end,_create) {e.esatest();body.esatest();},
+	      SetStatement: function(_,rhsE,_eq,e) {rhsE.esatest();},
+	      ForStatement: function(_,v,_eq,e,_in,body,_end,_for) {e.esatest();body.esatest();},
+	      LoopStatement: function(_,body,_end,_loop) {body.esatest();},
+	      ExitWhenStatement: function(_exit,_when,e) {e.esatest();},
+	      IfStatement: function (_,rhsE,thenBody,elseBody,_end,_if) {thenBody.esatest();elseBody.esatest();},
+	      ThenPart: function(_,statement) { statement.esatest(); },
+	      ElsePart: function(_,statement) { statement.esatest(); },
+	      ReturnStatement: function(_,e) {e.esatest();},
+	      CallInternalStatement: function(_,e) {e.esatest();},
+              CallExternalStatement: function(e) {e.esatest();},
+	      
+	      RHSExpression: function(external,e) {e.esatest();},
+	      AssignableExpression: function(e) {e.esatest();},
+	      Expression: function(e) {e.esatest();},
+	      Constant: function(e) {e.esatest();},
+	      TrueConstant: function(s) {s.esatest();},
+	      FalseConstant: function(s) {s.esatest();},
+	      SelfExpression: function(_self,_dot,etail) {etail.esatest();},
+	      ObjectExpression: function(field,_dot,etail) {field.esatest();etail.esatest();},
+	      ExpressionTail: function(field,actuals,_dot,etail) {field.esatest();actuals.esatest();etail.esatest();},
+	      Actuals: function(_lp,actuals,_rp) {actuals.esatest();},
+	      Actual: function(e) {e.esatest();},
+	      
+              lexical_symbol: function(c,cs) {
+		  console.log("lexical_symbol (pt): " + c.unity() + toPackedString(cs.unity()));
+	      },
+	      lexical_letchar: function(c) {c.esatest();},
+	      lexical_numchar: function(c) {c.esatest();},
+	      lexical_lc: function(c) {c.esatest();},
+	      lexical_uc: function(c) {c.esatest();},
+	      keyword: function(kw,_spc) {kw.esatest();},
+	      _terminal: function(){return this.primitiveValue;}
+}
+      );
+    </script>
+
   </head>
   <body>
-    <button onclick="parsetest()">Click me</button>
+    <button onclick="esatest()">Click me</button>
     <p id="timestamp"></p>
     <p id="result"></p>
     <script>
@@ -721,10 +813,12 @@ space += commentToEOL
       function displayDate () {
 	  document.getElementById('timestamp').innerHTML = Date();
       }
-      function parsetest () {
+      function esatest () {
           //console.log(g.trace(esadsl).toString());
           var r = g.match(esadsl);
+	  var sem = semantics(r);
 	  document.getElementById('result').innerHTML = r;
+	  sem.esatest();
 	  displayDate();
       }
     </script>
